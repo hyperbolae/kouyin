@@ -12,4 +12,8 @@ extern {
 #[wasm_bindgen]
 pub fn analyse_audio(buffer: AudioBuffer) {
     log(format!("Loaded an AudioBuffer with a sample rate of {}", buffer.sample_rate()).as_str());
+    let data: Vec<f32> = buffer.get_channel_data(0).ok().unwrap();
+
+    // Hereafter we can iterate over every sample.
+    // for _sample in data
 }

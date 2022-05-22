@@ -8,13 +8,22 @@
     <title>Test Suite</title>
 </head>
 <body>
-
+    <input id="audio-file" accept="audio/*" disabled type="file"/>
 </body>
 <script type="module">
     import init, {analyse_audio} from "../pkg/akusento.js";
-    init()
-        .then(() => {
-            analyse_audio(new AudioBuffer({length: 100, sampleRate: 4400}))
-        });
+    await init();
+    const $audioFileInput = document.getElementById('audio-file');
+    $audioFileInput.disabled = false;
+    $audioFileInput.onchange = async () => {
+        const file = $audioFileInput.files[0];
+        if (file !== undefined) {
+            const arrayBuffer = await file.arrayBuffer();
+            const audioContext = new AudioContext();
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+            analyse_audio(audioBuffer);
+            $audioFileInput.disabled = false;
+        }
+    };
 </script>
 </html>

@@ -5,15 +5,18 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <title>Test Suite</title>
 </head>
 <body>
     <input id="audio-file" accept="audio/*" disabled type="file"/>
+    <div style="width: 800px;"><canvas id="acquisitions"></canvas></div>
 </body>
 <script type="module">
     import init, {analyse_audio} from "../pkg/akusento.js";
     await init();
     const $audioFileInput = document.getElementById('audio-file');
+    let analysed = []
     $audioFileInput.disabled = false;
     $audioFileInput.onchange = async () => {
         const file = $audioFileInput.files[0];
@@ -21,7 +24,22 @@
             const arrayBuffer = await file.arrayBuffer();
             const audioContext = new AudioContext();
             const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-            analyse_audio(audioBuffer);
+            analysed = analyse_audio(audioBuffer);
+            new Chart(
+    document.getElementById('acquisitions'),
+    {
+      type: 'line',
+      data: {
+          labels : Array.from(Array(160).keys()),
+        datasets: [
+          {
+            label: 'Acquisitions by year',
+              data:  analysed
+          }
+        ]
+      }
+    }
+  );
             $audioFileInput.disabled = false;
         }
     };

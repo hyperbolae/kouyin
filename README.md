@@ -1,6 +1,6 @@
-# Akusento 
+# Kouyin 
 
-Akusento (アクセント) is an experimental library for detecting pitch-accent in audio.
+Kouyin is an experimental library for detecting pitch-accent in audio.
 
 ## Building 
 

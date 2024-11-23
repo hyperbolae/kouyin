@@ -10,10 +10,20 @@ extern {
 }
 
 #[wasm_bindgen]
-pub fn analyse_audio(buffer: AudioBuffer) {
+pub fn analyse_audio(buffer: AudioBuffer) -> Vec<f32> {
     log(format!("Loaded an AudioBuffer with a sample rate of {}", buffer.sample_rate()).as_str());
     let data: Vec<f32> = buffer.get_channel_data(0).ok().unwrap();
+    let mut count = 0;
+    let mut vec = Vec::new();
 
-    // Hereafter we can iterate over every sample.
-    // for _sample in data
+    for chunk in data.chunks(250) {
+        let mut total: f32 = 0.0;
+        for sample in chunk {
+            total += sample;
+        }
+
+        count = count + 1;
+        vec.push(total / 250.0);
+    }
+    return vec;
 }
